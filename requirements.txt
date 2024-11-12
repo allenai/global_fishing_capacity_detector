@@ -1,0 +1,6 @@
+rasterio
+scikit-image
+scikit-learn
+scipy
+shapely
+wandb
