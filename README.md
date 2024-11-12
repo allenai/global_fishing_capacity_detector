@@ -208,7 +208,7 @@ Identify the best checkpoint:
 
     cp lightning_logs/version_0/checkpoints/epoch*ckpt classifier.ckpt
 
-You may need to change the``version_0` to the correct subfolder in `lightning_logs` if you ran `model fit` multiple times.
+You may need to change the `version_0` to the correct subfolder in `lightning_logs` if you ran `model fit` multiple times.
 
 Evaluate it:
 
