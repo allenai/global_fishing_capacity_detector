@@ -1,6 +1,9 @@
+gcsfs
 rasterio
 scikit-image
 scikit-learn
 scipy
 shapely
+unidecode
+universal_pathlib
 wandb

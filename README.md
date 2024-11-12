@@ -89,7 +89,7 @@ Setup classifier environment:
 
     conda create --name gfcd_classifier python=3.12
     conda activate gfcd_classifier
-    pip install git+https://github.com/allenai/rslearn.git
+    pip install git+https://github.com/allenai/rslearn.git#egg=rslearn[extra]
     pip install -r requirements.txt
     conda deactivate
 
@@ -155,6 +155,7 @@ Choose a local directory to store the datasets:
 
 First, download the scenes and convert into a flat directory structure:
 
+    conda activate gfcd_detector
     python detector_preprocess/download_cloud_dataset.py --src_dir /path/to/raw/data/ --out_dir $GFCD_DATA_DIR/raw/
 
 Replace `/path/to/raw/data/` with the path to the raw training dataset. If it is on GCS

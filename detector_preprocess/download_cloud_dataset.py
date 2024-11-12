@@ -27,7 +27,7 @@ def retrieve_files(job: tuple[UPath, str]):
     prefix, out_dir = job
 
     # Get a flat name to use for these files in local output directory.
-    label = unidecode(prefix.replace("/", "_"))
+    label = unidecode(prefix.path.replace("/", "_"))
 
     wanted_suffixes = [
         "visual_labels.json",
@@ -45,6 +45,8 @@ def retrieve_files(job: tuple[UPath, str]):
         os.rename(dst_path + ".tmp", dst_path)
 
 if __name__ == "__main__":
+    multiprocessing.set_start_method("forkserver")
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--src_dir", help="Source directory, can be prefixed with gs:// or s3://")
     parser.add_argument("--out_dir", help="Local output directory")

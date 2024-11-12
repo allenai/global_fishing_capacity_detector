@@ -55,7 +55,7 @@ for fname in os.listdir(args.in_dir):
     prefixes.append(prefix)
 
 split_data = {}
-p = multiprocessing.Pool(64)
+p = multiprocessing.Pool(args.workers)
 outputs = p.imap_unordered(get_split, prefixes)
 for prefix, split in tqdm.tqdm(outputs, total=len(prefixes)):
     if split is None:
