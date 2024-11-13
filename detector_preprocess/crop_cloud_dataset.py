@@ -43,13 +43,13 @@ def crop_data(job):
 
     # Get the pan + ms images too.
     # And resize them to be same size as the visual image.
-    pan_raster = rasterio.open(os.path.join(in_dir, prefix + "-pan.tif"))
-    ms_raster = rasterio.open(os.path.join(in_dir, prefix + "-ms.tif"))
-    pan_image = pan_raster.read().transpose(1, 2, 0)
-    ms_image = ms_raster.read().transpose(1, 2, 0)
-    pan_image = skimage.transform.resize(pan_image, image.shape[0:2], order=1, preserve_range=True).astype(np.uint16)
-    ms_image = skimage.transform.resize(ms_image, image.shape[0:2], order=1, preserve_range=True).astype(np.uint16)
-    combined_image = np.concatenate([pan_image, ms_image], axis=2)
+    #pan_raster = rasterio.open(os.path.join(in_dir, prefix + "-pan.tif"))
+    #ms_raster = rasterio.open(os.path.join(in_dir, prefix + "-ms.tif"))
+    #pan_image = pan_raster.read().transpose(1, 2, 0)
+    #ms_image = ms_raster.read().transpose(1, 2, 0)
+    #pan_image = skimage.transform.resize(pan_image, image.shape[0:2], order=1, preserve_range=True).astype(np.uint16)
+    #ms_image = skimage.transform.resize(ms_image, image.shape[0:2], order=1, preserve_range=True).astype(np.uint16)
+    #combined_image = np.concatenate([pan_image, ms_image], axis=2)
 
     with open(os.path.join(in_dir, prefix + "-visual_labels.json"), "r") as f:
         data = json.load(f)
@@ -136,11 +136,11 @@ def crop_data(job):
                 ]
                 cur_labels.append(label)
 
-            combined_crop = combined_image[row:row+crop_size, col:col+crop_size, :]
+            #combined_crop = combined_image[row:row+crop_size, col:col+crop_size, :]
 
             out_prefix = os.path.join(out_dir, split, f"{prefix}_{col}_{row}")
             skimage.io.imsave(out_prefix+".png", crop, check_contrast=False)
-            np.save(out_prefix+".npy", combined_crop)
+            #np.save(out_prefix+".npy", combined_crop)
             with open(out_prefix+".json", "w") as f:
                 json.dump(cur_labels, f)
 
