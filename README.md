@@ -20,14 +20,15 @@ The pipeline consists of two models:
 
 The following components are included:
 
--   detector_preprocess: scripts to convert the Maxar scenes and annotations to 1024x1024
+-   `detector_preprocess`: scripts to convert the Maxar scenes and annotations to 1024x1024
     crops suitable for training the detector.
--   detector_mmrotate: adaptation of [mmrotate](https://github.com/open-mmlab/mmrotate).
+-   `detector_mmrotate`: adaptation of [mmrotate](https://github.com/open-mmlab/mmrotate).
     This folder includes the training and inference code for the object detector.
--   classify: code built on top of [rslearn](https://github.com/allenai/rslearn) for
+-   `classify`: code built on top of [rslearn](https://github.com/allenai/rslearn) for
     training and applying the classification model.
--   water_land: script to use ESA WorldCover (land cover map) to add the land_sq_km and
-    water_sq_km attributes for images, and the is_in_water attribute for vessels.
+-   `water_land`: script to use ESA WorldCover (land cover map) to add the `land_sq_km`
+    and `water_sq_km` attributes for images, and the `is_in_water` attribute for
+    vessels.
 
 
 ## Inference
@@ -99,6 +100,48 @@ Run the pipeline (it will use the "gfcd_classifier" environment for certain step
     python prediction_pipeline.py --scene /path/to/image/scene-visual.tif --out_dir /path/to/image/scene-visual-output/ --worldcover_dir /path/to/worldcover
 
 The `--worldcover_dir` is optional.
+
+
+### Output Format
+
+The output directory will contain the following files/folders:
+
+-   `image.csv`: CSV with one row describing the image.
+-   `vessel_with_is_in_water.csv`: CSV with vessel detections.
+-   `vis/`: folder containing a visualization of the input image with vessel detections
+    overlayed. The visualization is only created if there is at least one vessel in the
+    image.
+-   `crops/`: crops of the input image centered at each detected vessel.
+
+The `image.csv` contains the following columns:
+
+-   `fname`: the image filename.
+-   `pixel_x1`, `pixel_y1`, ..., `pixel_y4`: the pixel coordinates of the corners of
+    the image.
+-   `wgs84_x1`, `wgs84_y1`, ..., `wgs84_y4`: the longitude and latitude coordinates of
+    the corners of the image.
+-   `timestamp`: unused.
+-   `water_sq_km`: the area of water in this image in square km.
+-   `land_sq_km`: the area of land in this image in square km.
+
+If running without ESA WorldCover data, then `orig_images.csv` is created instead
+without the `water_sq_km` and `land_sq_km` columns.
+
+The `vessel_with_is_in_water.csv` contains the following columns:
+
+-   `fname`: the image filename.
+-   `idx`: the unique vessel detection index.
+-   `pixel_x1`, `pixel_y1`, ..., `pixel_y4`: the pixel coordinates of the corners of
+    the vessel (relative to the topleft of the image).
+-   `wgs84_x1`, `wgs84_y1`, ..., `wgs84_y4`: the longitude and latitude coordinates of
+    the corners of the vessel.
+-   `score`: the confidence score from the object detection model associated with this
+    detection.
+- `is_in_water`: "yes" if this vessel is in open water and "no" if it is on land or
+    moored.
+
+If running without ESA WorldCover data, then `vessel.csv` is created instead without
+the `is_in_water` column.
 
 
 ## Training
