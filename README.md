@@ -30,6 +30,8 @@ The following components are included:
     and `water_sq_km` attributes for images, and the `is_in_water` attribute for
     vessels.
 
+The code and model checkpoints are released under Apache License 2.0.
+
 
 ## Inference
 
