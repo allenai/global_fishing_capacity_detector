@@ -3,7 +3,6 @@ FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-devel
 RUN apt-get update
 RUN apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libsm6 libxrender-dev libxext6 wget
 
-
 ENV PATH="/root/miniconda3/bin:${PATH}"
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh && \
     bash miniconda.sh -b -p /root/miniconda3
@@ -28,4 +27,19 @@ COPY ./ /opt/gfcd/
 RUN conda run -n gfcd_detector pip install -v -e /opt/gfcd/detector_mmrotate/
 
 WORKDIR /opt/gfcd/
+
+# Obtain model weights if they don't already exist.
+RUN bash -c "\
+if [ ! -f /opt/gfcd/detector.pth ]; then \
+    echo 'Downloading detector weights'; \
+    wget -O /opt/gfcd/detector.pth https://pub-956f3eb0f5974f37b9228e0a62f449bf.r2.dev/global_fishing_capacity_project/detector.pth; \
+fi \
+"
+RUN bash -c "\
+if [ ! -f /opt/gfcd/classifier.ckpt ]; then \
+    echo 'Downloading classifier weights'; \
+    wget -O /opt/gfcd/classifier.ckpt https://pub-956f3eb0f5974f37b9228e0a62f449bf.r2.dev/global_fishing_capacity_project/classifier.ckpt; \
+fi \
+"
+
 ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "gfcd_detector", "python", "-u", "docker_entrypoint.py"]

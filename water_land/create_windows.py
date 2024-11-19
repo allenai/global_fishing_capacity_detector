@@ -11,6 +11,8 @@ import os
 
 import rasterio
 import shapely
+from rasterio.crs import CRS
+from rslearn.const import WGS84_EPSG
 from rslearn.dataset import Window
 from rslearn.utils.geometry import Projection, STGeometry
 from upath import UPath
@@ -48,7 +50,13 @@ if __name__ == "__main__":
             )
 
         src_geom = STGeometry(projection, image_bounds, None)
-        dst_projection = Projection(projection.crs, 5, -5)
+        # We don't want to store WorldCover data at the high resolution of Maxar image.
+        # So pick a reasonable resolution depending on the CRS (hopefully either UTM or
+        # WGS84).
+        if projection.crs == CRS.from_epsg(WGS84_EPSG):
+            dst_projection = Projection(projection.crs, 0.00005, -0.00005)
+        else:
+            dst_projection = Projection(projection.crs, 5, -5)
         dst_geom = src_geom.to_projection(dst_projection)
         window_bounds = [int(value) for value in dst_geom.shp.bounds]
 
