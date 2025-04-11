@@ -10,7 +10,10 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -
 # conda environment for classifier
 RUN conda create -y -n gfcd_classifier python=3.12
 RUN git clone https://github.com/allenai/rslearn.git /opt/rslearn
-RUN conda run -n gfcd_classifier pip install /opt/rslearn[extra]
+WORKDIR /opt/rslearn
+RUN git checkout afd96c08e6cbb2ebc204da1c8682ded297826772
+COPY ./rslearn_requirements_helper.txt /opt/gfcd/rslearn_requirements_helper.txt
+RUN conda run -n gfcd_classifier pip install /opt/rslearn[extra] -r /opt/gfcd/rslearn_requirements_helper.txt
 
 # conda environment for detector
 RUN conda create -y -n gfcd_detector python=3.10

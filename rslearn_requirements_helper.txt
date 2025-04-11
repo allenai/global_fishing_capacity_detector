@@ -1,0 +1,4 @@
+lightning[pytorch-extra] == 2.4.0
+fsspec==2024.10.0
+gcsfs==2024.10.0
+s3fs==2024.10.0
